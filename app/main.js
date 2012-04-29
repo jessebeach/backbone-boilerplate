@@ -9,13 +9,23 @@ require([
   "modules/example"
 ],
 
-function(namespace, $, Backbone, Example) {
+function(namespace, $, Backbone) {
+
+  // Get the list of overloaded arguments.
+  // These will be the modules defined in require. Modules should not be passed
+  // as explicit arguments of the callee function.
+  var Modules = Array.prototype.slice.call(arguments, arguments.callee.length) || [];
 
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     routes: {
       "": "index",
       ":hash": "index"
+    },
+
+    // Add module routes and route callbacks to the Router.
+    initialize: function(Modules) {
+      namespace.mergeSubroutes.call(this, Modules);
     },
 
     index: function(hash) {
@@ -50,7 +60,7 @@ function(namespace, $, Backbone, Example) {
   $(function() {
     // Define your master router on the application namespace and trigger all
     // navigation from this instance.
-    app.router = new Router();
+    app.router = new Router(Modules);
 
     // Trigger the initial route and enable HTML5 History API support
     Backbone.history.start({ pushState: true });

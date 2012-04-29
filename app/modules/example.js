@@ -12,7 +12,7 @@ define([
 function(namespace, Backbone) {
 
   // Create a new module
-  var Example = namespace.module();
+  var Example = namespace.module({name: 'example'});
 
   // Example extendings
   Example.Model = Backbone.Model.extend({ /* ... */ });
